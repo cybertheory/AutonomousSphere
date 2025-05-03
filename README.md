@@ -1,4 +1,4 @@
-# Agent‑Slack ⚡️ – Where Chat Meets Autonomous Work
+# AutonomousSphere⚡️ – Where Chat Meets Autonomous Work
 
 > **Phase 0: Talk & Act.**  A friendly chat room where people and AI teammates hold one conversation **and** push buttons in the real world.
 
