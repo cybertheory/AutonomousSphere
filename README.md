@@ -1,4 +1,3 @@
-
 # Agent‑Slack ⚡️ – Where Chat Meets Autonomous Work
 
 > **Phase 0: Talk & Act.**  A friendly chat room where people and AI teammates hold one conversation **and** push buttons in the real world.
@@ -21,10 +20,10 @@ Imagine you’re in Slack with a teammate who can **type _and_ press the deploy 
 
 ```mermaid
 flowchart LR
-  Human & Agents -->|chat| Room
+  Human_Agents -->|chat| Room
   Room -->|events| MessageHub
   subgraph Agent
-    "Python A2A SDK" --> Tools
+    Python_A2A_SDK --> Tools
   end
   MessageHub <-->|updates| Agent
 ```
