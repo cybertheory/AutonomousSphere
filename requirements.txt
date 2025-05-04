@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+pydantic
+pydantic[email]
+sqlalchemy
+psycopg2-binary
+python-jose
+passlib
+python-multipart
+redis
+aiohttp
+python-dotenv
+websockets
+python-a2a
+redis[hiredis]
