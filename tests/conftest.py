@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from fastapi.testclient import TestClient
 import sys
+from unittest.mock import AsyncMock, patch
 
 # Add the parent directory to the path so we can import the application
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -15,7 +16,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from api.db.database import Base, get_db
 from api.main import app
 from api.pubsub.broker import broker
-from api.pubsub.a2a_client import a2a_integration
+from api.pubsub.a2a_client import get_a2a_integration
 
 # Test database URL
 TEST_DATABASE_URL = os.getenv(
@@ -26,6 +27,14 @@ TEST_DATABASE_URL = os.getenv(
 # Create test database engine
 engine = create_engine(TEST_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+@pytest.fixture(autouse=True)
+def mock_a2a_integration():
+    with patch("api.pubsub.a2a_client.get_a2a_integration") as mock:
+        mock_integration = AsyncMock()
+        mock.return_value = mock_integration
+        yield mock_integration
 
 @pytest.fixture(scope="session")
 def event_loop():
@@ -65,9 +74,25 @@ def client(db_session):
         finally:
             pass
     
+    # Override the get_db dependency
     app.dependency_overrides[get_db] = override_get_db
+    
+    # Add this line to bypass authentication in tests
+    # This assumes you have a get_current_active_user dependency in your routes
+    from api.services.auth_service import get_current_active_user
+    
+    # Create a mock user for testing
+    async def mock_current_user():
+        from api.schemas.user import User
+        return User(id=1, username="test_user", email="test@example.com", is_active=True)
+    
+    # Override the authentication dependency
+    app.dependency_overrides[get_current_active_user] = mock_current_user
+    
     with TestClient(app) as test_client:
         yield test_client
+    
+    # Clear all overrides after the test
     app.dependency_overrides.clear()
 
 @pytest.fixture
@@ -127,6 +152,7 @@ async def test_broker():
 async def test_a2a_integration():
     """Create a test A2A integration instance."""
     # Use the existing a2a_integration but clear all agents
+    a2a_integration = get_a2a_integration()
     a2a_integration.agents = {}
     
     yield a2a_integration

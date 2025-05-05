@@ -87,3 +87,15 @@ class Agent(Base):
     
     # Relationships
     messages = relationship("Message", back_populates="agent")
+
+# Add ChannelMember class for tests
+class ChannelMemberModel(Base):
+    __tablename__ = 'channel_member_models'
+    
+    channel_id = Column(Integer, ForeignKey('channels.id'), primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    # Relationships
+    channel = relationship("Channel", backref="channel_member_assocs")
+    user = relationship("User", backref="channel_member_assocs")

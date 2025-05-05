@@ -11,17 +11,22 @@ import time
 logger = logging.getLogger(__name__)
 
 class A2AIntegration:
-    def __init__(self, registry_url: Optional[str] = None):
-        self.agents: Dict[str, A2AClient] = {}
-        self.discovery_client = None
+    def __init__(self, registry_url):
         self.registry_url = registry_url
+        # Fix: Initialize DiscoveryClient correctly
+        self.discovery_client = DiscoveryClient(agent_card=None)
+        self.discovery_client.add_registry(registry_url)
+        self.agents = {}
+        self._discovery_task = None
+        # Add these missing properties that are used in discover_agents
+        self.discovery_interval = 60  # Default to 60 seconds
         self.last_discovery_time = 0
-        self.discovery_interval = 30  # seconds
         
-        if registry_url:
-            self.setup_discovery(registry_url)
-            # Start periodic discovery
-            asyncio.create_task(self._periodic_discovery())
+    async def start(self):
+        """Start the periodic discovery task"""
+        if self._discovery_task is None:
+            self._discovery_task = asyncio.create_task(self._periodic_discovery())
+        return self
     
     def setup_discovery(self, registry_url: str):
         """Set up the A2A discovery client"""
@@ -224,4 +229,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 REGISTRY_URL = os.getenv("REGISTRY_URL", "http://registry:8081")
-a2a_integration = A2AIntegration(registry_url=REGISTRY_URL)
+_a2a_integration = None
+
+def get_a2a_integration():
+    global _a2a_integration
+    if _a2a_integration is None:
+        _a2a_integration = A2AIntegration(registry_url=REGISTRY_URL)
+    return _a2a_integration

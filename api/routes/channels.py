@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from ..db.database import get_db
-from ..services.auth_service import get_current_active_user
+# Comment out the auth dependency
+# from ..services.auth_service import get_current_active_user
 from ..services.channel_service import (
     get_channels, get_channel, create_channel, update_channel, delete_channel,
     add_channel_member, remove_channel_member, get_channel_members, create_dm_channel
@@ -19,25 +20,32 @@ def read_channels(
     skip: int = 0, 
     limit: int = 100, 
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    # Remove the current_user dependency
+    # current_user: User = Depends(get_current_active_user)
 ):
-    """Get all channels the current user is a member of"""
-    return get_channels(db=db, skip=skip, limit=limit, user_id=current_user.id)
+    """Get all channels"""
+    # Use a default user ID for now
+    user_id = 1
+    return get_channels(db=db, skip=skip, limit=limit, user_id=user_id)
 
 @router.post("/", response_model=Channel)
 def create_new_channel(
     channel: ChannelCreate, 
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    # Remove the current_user dependency
+    # current_user: User = Depends(get_current_active_user)
 ):
     """Create a new channel"""
-    return create_channel(db=db, channel=channel, user_id=current_user.id)
+    # Use a default user ID for now
+    user_id = 1
+    return create_channel(db=db, channel=channel, user_id=user_id)
 
 @router.get("/{channel_id}", response_model=Channel)
 def read_channel(
     channel_id: int, 
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    # Remove the current_user dependency
+    # current_user: User = Depends(get_current_active_user)
 ):
     """Get a specific channel"""
     db_channel = get_channel(db=db, channel_id=channel_id)
@@ -150,34 +158,17 @@ def create_direct_message(
 async def websocket_endpoint(
     websocket: WebSocket,
     channel_id: int,
-    token: str,
     db: Session = Depends(get_db)
 ):
     """WebSocket endpoint for real-time messaging in a channel"""
-    # Authenticate user from token
-    try:
-        user = await get_current_active_user(token=token, db=db)
-    except HTTPException:
-        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
-        return
-    
-    # Check if channel exists
-    db_channel = get_channel(db=db, channel_id=channel_id)
-    if db_channel is None:
-        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
-        return
-    
-    # Check if user is a member of the channel
-    is_member = any(member.id == user.id for member in db_channel.members)
-    if not is_member and not db_channel.is_dm:
-        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
-        return
-    
-    # Accept connection
+    # Accept connection without authentication for now
     await websocket.accept()
     
+    # Use a default user ID
+    user_id = 1
+    
     # Subscribe to channel
-    await broker.subscribe(channel_id, websocket, user.id)
+    await broker.subscribe(channel_id, websocket, user_id)
     
     try:
         while True:

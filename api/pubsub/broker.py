@@ -32,13 +32,21 @@ class PubSubBroker:
                 # Create async Redis client
                 self.redis = aioredis.from_url(self.redis_url)
                 logger.info(f"Redis connection established at {self.redis_url}")
-                
-                # Start background task to listen for Redis messages
-                asyncio.create_task(self._start_redis_listener())
+                # Don't start the listener task here
             except Exception as e:
                 logger.error(f"Failed to initialize Redis: {e}")
                 self.redis = None
     
+    async def start_redis_listener(self):
+        """Start the Redis listener in an async context"""
+        if self.redis:
+            try:
+                # Start background task to listen for Redis messages
+                asyncio.create_task(self._start_redis_listener())
+                logger.info("Redis listener task created")
+            except Exception as e:
+                logger.error(f"Failed to start Redis listener: {e}")
+
     async def _start_redis_listener(self):
         """Start listening for Redis pub/sub messages"""
         if not self.redis:

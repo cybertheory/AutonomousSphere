@@ -1,6 +1,6 @@
 import pytest
 from sqlalchemy.orm import Session
-from api.db.models import User, Channel, Message, ChannelMember
+from api.db.models import User, Channel, Message, ChannelMemberModel
 from api.db.database import Base, engine
 
 def test_user_model(db_session: Session):

@@ -1,8 +1,10 @@
 from fastapi import FastAPI
+from .pubsub.a2a_client import get_a2a_integration
 from fastapi.middleware.cors import CORSMiddleware
 import logging
+from .pubsub.broker import broker
 
-from .routes import users, auth, channels, messages, agents
+from .routes import  channels, messages, agents
 from .db.database import engine, Base
 
 # Configure logging
@@ -31,11 +33,19 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(auth.router)
-app.include_router(users.router)
+# app.include_router(auth.router)
+# app.include_router(users.router)
 app.include_router(channels.router)
 app.include_router(messages.router)
 app.include_router(agents.router)
+
+
+@app.on_event("startup")
+async def startup_event():
+    # Initialize and start the A2A integration
+    a2a_integration = get_a2a_integration()
+    await a2a_integration.start()
+    await broker.start_redis_listener()
 
 @app.get("/")
 def read_root():

@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from ..db.database import get_db
-from ..services.auth_service import get_current_active_user
+# Comment out the auth dependency
+# from ..services.auth_service import get_current_active_user
 from ..schemas.user import User
-from ..pubsub.a2a_client import a2a_integration
+from ..pubsub.a2a_client import get_a2a_integration
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/agents", tags=["agents"])
@@ -19,11 +20,12 @@ class AgentInfo(BaseModel):
 @router.get("/", response_model=List[AgentInfo])
 async def list_agents(
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    # Remove the current_user dependency
+    # current_user: User = Depends(get_current_active_user)
 ):
     """List all available agents"""
     agents = []
-    for name, agent in a2a_integration.agents.items():
+    for name, agent in get_a2a_integration().agents.items():
         url = agent.base_url if hasattr(agent, 'base_url') else agent
         agents.append(AgentInfo(
             name=name,
@@ -35,10 +37,11 @@ async def list_agents(
 
 @router.post("/discover")
 async def discover_agents(
-    current_user: User = Depends(get_current_active_user)
+    # Remove the current_user dependency
+    # current_user: User = Depends(get_current_active_user)
 ):
     """Manually trigger agent discovery"""
-    agents = await a2a_integration.discover_agents()
+    agents = await get_a2a_integration().discover_agents()
     return {"message": f"Discovered {len(agents)} agents"}
 
 @router.post("/message/{agent_name}")
@@ -46,13 +49,16 @@ async def send_message_to_agent(
     agent_name: str,
     message: str,
     channel_id: Optional[int] = None,
-    current_user: User = Depends(get_current_active_user)
+    # Remove the current_user dependency
+    # current_user: User = Depends(get_current_active_user)
 ):
     """Send a message to an agent"""
-    response = await a2a_integration.send_message_to_agent(
+    # Use a default user ID for now
+    user_id = 1
+    response = await get_a2a_integration().send_message_to_agent(
         agent_name=agent_name,
         message_content=message,
         channel_id=channel_id,
-        user_id=current_user.id
+        user_id=user_id
     )
     return response

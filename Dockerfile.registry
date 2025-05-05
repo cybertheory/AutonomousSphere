@@ -1,0 +1,26 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Expose port
+EXPOSE 8081
+
+# Set environment variables
+ENV DATABASE_URL=postgresql://postgres:postgres@db:5432/autonomoussphere
+ENV REDIS_URL=redis://redis:6379/0
+ENV A2A_REGISTRY_URL=http://example-agent:8080
+
+# Run the application
+CMD ["uvicorn", "registry_service.main:app", "--host", "0.0.0.0", "--port", "8081", "--reload"]
