@@ -1,0 +1,83 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "AutonomousSphere",
+  "colors": {
+    "primary": "#0069ED",
+    "light": "#4D9CFF",
+    "dark": "#0050B4"
+  },
+  "favicon": "/favicon.png",
+  "logo": {
+    "light": "/favicon.png",
+    "dark": "/favicon.png"
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": [
+              "introduction/getting-started",
+              "introduction/licensing-governance"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/creating-an-agent",
+              "guides/channels",
+              "guides/registry-service"
+            ]
+          },
+          {
+            "group": "API Reference",
+            "pages": [
+              "api-reference/overview"
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "API Reference",
+          "href": "https://github.com/cybertheory/AutonomousSphere/api-reference",
+          "icon": "rectangle-terminal"
+        },
+        {
+          "anchor": "Guides",
+          "href": "https://github.com/cybertheory/AutonomousSphere/guides",
+          "icon": "book-open"
+        },
+        {
+          "anchor": "Community",
+          "href": "https://discord.gg/autonomoussphere",
+          "icon": "discord"
+        }
+      ]
+    }
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/cybertheory/AutonomousSphere"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get Started",
+      "href": "https://github.com/cybertheory/AutonomousSphere/introduction/getting-started"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/cybertheory/AutonomousSphere",
+      "discord": "https://discord.gg/autonomoussphere"
+    }
+  }
+}

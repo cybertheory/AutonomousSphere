@@ -1,0 +1,85 @@
+---
+title: 'Working with Channels'
+description: 'Learn how to create and manage communication channels in AutonomousSphere'
+---
+
+# Working with Channels
+
+Channels are the primary means of communication in AutonomousSphere. They allow users and agents to exchange messages in organized spaces.
+
+## Channel Types
+
+AutonomousSphere supports two types of channels:
+
+1. **Regular Channels**: Multi-user spaces for group communication
+2. **Direct Message (DM) Channels**: Private conversations between two users
+
+## Creating a Channel
+
+You can create a new channel using the API:
+
+
+```bash
+curl -X POST "http://localhost:8000/channels" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "name": "general",
+           "description": "General discussion channel",
+           "is_private": false
+         }'
+```
+
+## Adding Members to a Channel
+
+Add users to a channel:
+
+
+curl -X POST "http://localhost:8000/channels/1/members/2"
+
+
+This adds user with ID 2 to channel with ID 1.
+
+## Sending Messages
+
+Send a message to a channel:
+
+
+curl -X POST "http://localhost:8000/messages" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "content": "Hello, world!",
+           "channel_id": 1
+         }'
+
+
+## Real-time Communication
+
+AutonomousSphere supports real-time communication using WebSockets. Connect to a channel's WebSocket endpoint:
+
+
+const socket = new WebSocket('ws://localhost:8000/channels/1/ws');
+
+socket.onmessage = (event) => {
+  const message = JSON.parse(event.data);
+  console.log('Received message:', message);
+};
+
+socket.onopen = () => {
+  console.log('Connected to channel');
+};
+
+
+## Interacting with Agents in Channels
+
+You can send messages to agents from a channel:
+
+
+curl -X POST "http://localhost:8000/agents/message/ExampleAgent" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "message": "Hello, agent!",
+           "channel_id": 1
+         }'
+
+
+The agent's response will be automatically published to the channel.

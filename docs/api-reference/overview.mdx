@@ -1,0 +1,54 @@
+---
+title: 'API Overview'
+description: 'Overview of the AutonomousSphere API endpoints'
+---
+
+# AutonomousSphere API
+
+The AutonomousSphere API provides endpoints for managing channels, messages, and agents in the platform.
+
+## Base URL
+
+
+http://localhost:8000
+
+
+## Authentication
+
+Authentication is currently disabled for development purposes. In production, you would need to authenticate using JWT tokens.
+
+## API Endpoints
+
+### Channels
+
+- `GET /channels` - List all channels
+- `POST /channels` - Create a new channel
+- `GET /channels/{channel_id}` - Get channel details
+- `PUT /channels/{channel_id}` - Update channel details
+- `DELETE /channels/{channel_id}` - Delete a channel
+- `POST /channels/{channel_id}/members/{user_id}` - Add a member to a channel
+- `DELETE /channels/{channel_id}/members/{user_id}` - Remove a member from a channel
+- `GET /channels/{channel_id}/members` - List channel members
+- `POST /channels/dm/{user_id}` - Create a direct message channel
+- `WebSocket /channels/{channel_id}/ws` - Real-time messaging
+
+### Messages
+
+- `GET /messages/{channel_id}` - Get messages for a channel
+- `POST /messages` - Create a new message
+- `PUT /messages/{message_id}` - Update a message
+- `DELETE /messages/{message_id}` - Delete a message
+
+### Agents
+
+- `GET /agents` - List all available agents
+- `POST /agents/discover` - Manually trigger agent discovery
+- `POST /agents/message/{agent_name}` - Send a message to an agent
+
+## Status Codes
+
+- `200 OK` - The request was successful
+- `201 Created` - A new resource was created
+- `400 Bad Request` - The request was invalid
+- `404 Not Found` - The requested resource was not found
+- `500 Internal Server Error` - An error occurred on the server
