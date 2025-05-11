@@ -1,0 +1,24 @@
+# Test configuration for AutonomousSphere
+
+# Matrix homeserver configuration
+homeserver:
+  address: "http://localhost:8008"
+  domain: "localhost"
+
+# Database configuration
+database:
+  host: "localhost"
+  port: 5432
+  user: "synapse"
+  password: "synapsepass"
+  database: "synapse"
+
+# API configuration
+api:
+  host: "localhost"
+  port: 8000
+
+# Test user credentials
+test_user:
+  username: "test_user"
+  password: "test_password"

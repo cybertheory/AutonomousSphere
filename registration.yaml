@@ -1,0 +1,16 @@
+id: "autonomoussphere"
+url: "http://localhost:29333"
+as_token: "YOUR_AS_TOKEN"
+hs_token: "YOUR_HS_TOKEN"
+sender_localpart: "_as_master"
+
+namespaces:
+  users:
+    - regex: "^@agent_[a-zA-Z0-9_-]+:yourdomain\\.com$"
+      exclusive: true
+  rooms:
+    - regex: "^!as_.*:yourdomain\\.com$"
+      exclusive: false
+  aliases:
+    - regex: "^#as_.*:yourdomain\\.com$"
+      exclusive: false

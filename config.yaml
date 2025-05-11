@@ -1,0 +1,15 @@
+homeserver:
+  address: "https://matrix.yourdomain.com"
+  domain: "yourdomain.com"
+
+appservice:
+  id: "autonomoussphere"
+  bot_username: "_as_master"
+  token: "YOUR_AS_TOKEN"
+  homeserver_token: "YOUR_HS_TOKEN"
+  database: "sqlite:///mautrix-as.db"
+  port: 29333
+  address: "0.0.0.0"
+
+logging:
+  level: DEBUG

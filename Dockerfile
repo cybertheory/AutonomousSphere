@@ -1,26 +1,29 @@
-FROM python:3.9-slim
+# Use minimal Python base
+FROM python:3.11-slim
 
-WORKDIR /app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# System-level dependencies
+RUN apt-get update && apt-get install -y \
     build-essential \
+    libffi-dev \
+    libpq-dev \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Set environment
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+WORKDIR /app
 
-# Copy application code
+# Install Python dependencies
+COPY pyproject.toml poetry.lock ./
+RUN pip install --upgrade pip && pip install poetry
+RUN poetry config virtualenvs.create false && poetry install --no-root
+
+# Copy source code
 COPY . .
 
-# Expose port
-EXPOSE 8000
+# Expose AppService port (as configured in `config.yaml`)
+EXPOSE 29333
 
-# Set environment variables
-ENV DATABASE_URL=postgresql://postgres:postgres@db:5432/autonomoussphere
-ENV REDIS_URL=redis://redis:6379/0
-ENV A2A_REGISTRY_URL=http://example-agent:8080
-
-# Run the application
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Default startup command
+CMD ["python", "main.py"]

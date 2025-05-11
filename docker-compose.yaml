@@ -1,0 +1,50 @@
+services:
+  synapse:
+    image: matrixdotorg/synapse:latest
+    container_name: synapse
+    restart: unless-stopped
+    volumes:
+      - ./synapse/data:/data
+      - ./registration.yaml:/data/registration.yaml
+      - ./scripts/inject-registration.sh:/start.sh
+    entrypoint: ["/bin/bash", "/start.sh"]
+    environment:
+      - SYNAPSE_SERVER_NAME=localhost
+      - SYNAPSE_REPORT_STATS=no
+    ports:
+      - "8008:8008"
+    depends_on:
+      - postgres
+
+  postgres:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    container_name: synapse_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: synapse
+      POSTGRES_PASSWORD: synapsepass
+      POSTGRES_DB: synapse
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init-pgvector.sql:/docker-entrypoint-initdb.d/init-pgvector.sql
+
+  autonomoussphere:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: autonomoussphere
+    restart: unless-stopped
+    volumes:
+      - ./config.yaml:/app/config.yaml
+      - ./registration.yaml:/app/registration.yaml
+    environment:
+      - MAUTRIX_CONFIG=/app/config.yaml
+    depends_on:
+      - synapse
+    ports:
+      - "29333:29333"  # AppService listening port
+
+volumes:
+  postgres_data:
