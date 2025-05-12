@@ -17,9 +17,7 @@ services:
       - postgres
 
   postgres:
-    build:
-      context: ./postgres
-      dockerfile: Dockerfile
+    image: pgvector/pgvector:pg13
     container_name: synapse_postgres
     restart: unless-stopped
     environment:
