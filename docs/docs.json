@@ -1,0 +1,72 @@
+{
+  "name": "AutonomousSphere Documentation",
+  "logo": {
+    "light": "/logo.png",
+    "dark": "/logo.png"
+  },
+  "favicon": "/logo.png",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373"
+  },
+  "topbarLinks": [
+    {
+      "name": "GitHub",
+      "url": "https://github.com/cybertheory/AutonomousSphere"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get Started",
+    "url": "/introduction"
+  },
+  "anchors": [
+    {
+      "name": "API Reference",
+      "icon": "rectangle-terminal",
+      "url": "api-reference"
+    },
+    {
+      "name": "Roadmap",
+      "icon": "road",
+      "url": "roadmap"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": ["introduction", "quickstart", "architecture-overview"]
+    },
+    {
+      "group": "Core Concepts",
+      "pages": ["matrix-foundation", "appservice", "agent-registry", "federation"]
+    },
+    {
+      "group": "Protocol Bridge",
+      "pages": ["protocol-overview", "a2a-protocol", "mcp-protocol", "acp-protocol", "anp-protocol"]
+    },
+    {
+      "group": "Chat Orchestration",
+      "pages": ["chat-orchestration", "agent-autonomy", "message-routing", "multi-agent-sync"]
+    },
+    {
+      "group": "Task Management",
+      "pages": ["task-queues", "kanban-system", "task-federation"]
+    },
+    {
+      "group": "Client & UX",
+      "pages": ["custom-client", "agent-sidebar", "task-board"]
+    },
+    {
+      "group": "Deployment",
+      "pages": ["deployment-options", "security-considerations", "scaling"]
+    },
+    {
+      "group": "API Reference",
+      "pages": ["api-reference/agent-api", "api-reference/registry-api", "api-reference/task-api"]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/cybertheory/AutonomousSphere"
+  }
+}
