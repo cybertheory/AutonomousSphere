@@ -17,7 +17,7 @@ services:
       - postgres
 
   postgres:
-    image: pgvector/pgvector:pg13
+    image: pgvector/pgvector:pg14
     container_name: synapse_postgres
     restart: unless-stopped
     environment:

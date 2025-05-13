@@ -15,9 +15,11 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Install Python dependencies
-COPY pyproject.toml poetry.lock ./
-RUN pip install --upgrade pip && pip install poetry
-RUN poetry config virtualenvs.create false && poetry install --no-root
+COPY pyproject.toml ./
+RUN pip install --upgrade pip && pip install poetry ruamel.yaml
+RUN poetry config virtualenvs.create false
+RUN poetry lock
+RUN poetry install --no-root
 
 # Copy source code
 COPY . .
